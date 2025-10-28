@@ -97,16 +97,19 @@ class DataTransformation:
             ]
 
             logging.info("Saving Preprocessor Pickle File")
+            
             save_object(
                 filepath=self.dataTransformationObj.pkl_file_path,
                 obj=preprocessor
             )
 
             logging.info("Returning the transformed data...")
+
             return (
                 train_arr,
                 test_arr,
                 self.dataTransformationObj.pkl_file_path
             )
+        
         except Exception as e:
             raise CustomException(e, sys)

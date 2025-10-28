@@ -6,6 +6,7 @@ from src.exception import CustomException
 from src.logger import logging
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 
 raw_data = "notebook/data/stud.csv"
 
@@ -34,9 +35,20 @@ class DataIngestion:
             test_set.to_csv(self.data_paths.test_data_path, header=True)
 
             logging.info("Train-Test split completed and stored")
+
             return (
                 self.data_paths.train_data_path,
                 self.data_paths.test_data_path
             )
         except Exception as e:
             raise CustomException(e, sys)
+
+if __name__ == '__main__':
+    obj = DataIngestion()
+    train_data, test_data = obj.initiate_data_ingestion()
+
+    data_transformation = DataTransformation()
+    train_arr, test_arr, _ = data_transformation.transformation(train_data, test_data)
+
+    modelTrainer = ModelTrainer()
+    print(modelTrainer.initiate_model_training(train_arr, test_arr))
