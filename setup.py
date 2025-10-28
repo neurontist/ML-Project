@@ -4,14 +4,15 @@ from typing import List
 HYPEN_E_DOT = "-e ."
 
 def get_requirements(filepath:str) -> List[str]:
+    requirements = []
     with open(filepath) as file_obj:
         packages = file_obj.readlines()
-        requiremnts = [req.replace("\n","") for req in packages]
+        requirements = [req.replace("\n","") for req in packages]
 
-    if HYPEN_E_DOT in requiremnts:
-        requiremnts.remove(HYPEN_E_DOT)
+    if HYPEN_E_DOT in requirements:
+        requirements.remove(HYPEN_E_DOT)
 
-    return  requiremnts
+    return  requirements
 
 
 setup(
