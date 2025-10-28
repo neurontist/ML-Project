@@ -1,0 +1,34 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyInterpreterInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="ignoredPackages">
+        <list>
+          <option value="numpy" />
+          <option value="pandas" />
+          <option value="scikit-learn" />
+          <option value="catboost" />
+          <option value="optuna" />
+          <option value="matplotlib" />
+          <option value="seaborn" />
+          <option value="jupyter" />
+          <option value="pytest" />
+          <option value="black" />
+          <option value="flake8" />
+          <option value="pyarrow" />
+          <option value="pre-commit" />
+          <option value="ydata-profiling" />
+          <option value="dash" />
+          <option value="plotly" />
+          <option value="dash-bootstrap-components" />
+          <option value="pyyaml" />
+          <option value="python-dateutil" />
+          <option value="gunicorn" />
+          <option value="flask" />
+          <option value="requests" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
