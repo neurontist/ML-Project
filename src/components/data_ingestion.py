@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from src.exception import CustomException
 from src.logger import logging
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformation
 
 raw_data = "notebook/data/stud.csv"
 
@@ -39,7 +40,3 @@ class DataIngestion:
             )
         except Exception as e:
             raise CustomException(e, sys)
-
-if __name__ == '__main__':
-    obj = DataIngestion()
-    obj.initiate_data_ingestion()
