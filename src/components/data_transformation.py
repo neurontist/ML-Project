@@ -65,10 +65,12 @@ class DataTransformation:
 
     def transformation(self,train_path, test_path):
         try:
-            logging.info("Train-Test Data Loading...")
-
+            logging.info(f"Starting data transformation process...")
+            logging.info(f"Loading train data from: {train_path}")
             train_data = pd.read_csv(train_path)
+            logging.info(f"Loading test data from: {test_path}")
             test_data = pd.read_csv(test_path)
+            logging.info(f"Data loaded successfully. Train shape: {train_data.shape}, Test shape: {test_data.shape}")
 
             logging.info("Preprocessor Loading...")
 
@@ -83,10 +85,14 @@ class DataTransformation:
             test_input_data = test_data.drop(columns=[target_column_name], axis=1)
             test_output_data = test_data[target_column_name]
 
-            logging.info("Transforming train data")
+            logging.info("Starting data transformation process...")
+            logging.info(f"Fitting and transforming train data of shape: {train_input_data.shape}")
             transformed_train_input_data = preprocessor.fit_transform(train_input_data)
-            logging.info("Transforming test data")
+            logging.info(f"Train data transformed. Output shape: {transformed_train_input_data.shape}")
+            
+            logging.info(f"Transforming test data of shape: {test_input_data.shape}")
             transformed_test_input_data = preprocessor.transform(test_input_data)
+            logging.info(f"Test data transformed. Output shape: {transformed_test_input_data.shape}")
 
             train_arr = np.c_[
                 transformed_train_input_data, np.array(train_output_data)

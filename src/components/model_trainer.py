@@ -28,13 +28,15 @@ class ModelTrainer:
 
     def initiate_model_training(self, train_array, test_array):
         try:
-            logging.info("Creating train and test....")
+            logging.info("Starting model training process")
+            logging.info("Splitting arrays into features and target variables")
             X_train, y_train, X_test, y_test = (
                 train_array[:,:-1],
                 train_array[:,-1],
                 test_array[:,:-1],
                 test_array[:,-1]
             )
+            logging.info(f"Training data shape: X={X_train.shape}, y={y_train.shape}")
 
             models = {
                     "Random Forest": RandomForestRegressor(),
@@ -81,14 +83,21 @@ class ModelTrainer:
             
             logging.info("Creating model score dictionary...")
 
+            logging.info("Starting model evaluation process...")
             model_report:dict = evaluate_model(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models, params=params)
+            
+            logging.info("Model evaluation completed. Results:")
+            for model_name, score in model_report.items():
+                logging.info(f"{model_name}: R2 Score = {score}")
 
             best_model_score = max(model_report.values())
             best_model_name = max(model_report, key=model_report.get)
             best_model = models[best_model_name]
             
-            logging.info("Checking model scores...")
+            logging.info(f"Best performing model: {best_model_name} with R2 score: {best_model_score}")
+            
             if best_model_score<0.6:
+                logging.error(f"No model achieved minimum required R2 score of 0.6. Best score: {best_model_score}")
                 raise CustomException("No best model found")
             
             best_model.fit(X_train, y_train)

@@ -13,19 +13,24 @@ from src.logger import logging
 
 def save_object(filepath, obj):
     try:
+        logging.info(f"Attempting to save object to {filepath}")
         dir_path = os.path.dirname(filepath)
         os.makedirs(dir_path, exist_ok=True)
+        logging.info(f"Directory {dir_path} created/verified")
         
         with open(filepath, "wb") as file_obj:
             pickle.dump(obj, file_obj)
+        logging.info(f"Object successfully saved to {filepath}")
 
     except Exception as e:
+        logging.error(f"Error occurred while saving object to {filepath}")
         raise CustomException(e, sys)
     
 def evaluate_model(X_train, y_train, X_test, y_test, models, params, cv=3, n_jobs=3, verbose=False):
     try:
         report = {}
-        logging.info("Into model eval")
+        logging.info(f"Starting model evaluation with {len(models)} models")
+        logging.info(f"Cross-validation folds: {cv}, n_jobs: {n_jobs}")
 
         # iterate by name so we can pick the matching param grid per model
         for model_name, model in models.items():
