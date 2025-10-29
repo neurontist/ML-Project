@@ -6,7 +6,7 @@ import pandas as pd
 import dill
 import pickle
 from sklearn.metrics import r2_score
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 
 from src.exception import CustomException
 from src.logger import logging
@@ -23,31 +23,42 @@ def save_object(filepath, obj):
         raise CustomException(e, sys)
     
 def evaluate_model(X_train, y_train, X_test, y_test, models, params, cv=3, n_jobs=3, verbose=False):
-    report = {}
+    try:
+        report = {}
+        logging.info("Into model eval")
 
-    logging.info("Into model eval")
+        # iterate by name so we can pick the matching param grid per model
+        for model_name, model in models.items():
+            # get only the param grid for this model (default to empty dict/list)
+            param_grid = params.get(model_name, {})
+            if not isinstance(param_grid, (dict, list)):
+                param_grid = {}
 
-    for i in range(len(list(models))):
-        model = list(models.values())[i]
+            gs = GridSearchCV(estimator=model, param_grid=param_grid, cv=cv, n_jobs=n_jobs, verbose=verbose, scoring="r2")
+            gs.fit(X_train, y_train)
 
-        rs = RandomizedSearchCV(estimator=model, param_distributions=params, cv=cv, n_jobs=n_jobs, verbose=verbose)
-        rs.fit(X_train, y_train)
+            best_estimator = gs.best_estimator_
+            best_estimator.fit(X_train, y_train)
 
-        model.set_params(**rs.best_params_)
-        model.fit(X_train, y_train)
+            train_pred = best_estimator.predict(X_train)
+            train_score = r2_score(y_true=y_train, y_pred=train_pred)
 
-        train_pred = model.predict(X_train)
-        train_score = r2_score(y_true=y_train, y_pred=train_pred)
+            test_pred = best_estimator.predict(X_test)
+            test_score = r2_score(y_true=y_test, y_pred=test_pred)
 
-        test_pred = model.predict(X_test)
-        test_score = r2_score(y_true=y_test, y_pred=test_pred)
+            report[model_name] = test_score
 
-        report[list(models.keys())[i]] = test_score
+        logging.info("Returning report")
+        return report
 
-    logging.info("Returing report")
+    except Exception as e:
+        raise CustomException(e, sys)
 
-    return report
-
-
-
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+    except Exception as e:
+        raise CustomException(e, sys)
+    
 
